@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import TodoItem from './TodoItem.js';
 import './style.css';
+import axios from 'axios';
 
 class TodoList extends Component {
   constructor(props) {
@@ -76,6 +77,16 @@ class TodoList extends Component {
       copyList.splice(index, 1);
       return { list: copyList }
     })
+  }
+
+  componentDidMount() { // 一般在 componentDidMount 中进行数据的请求
+    axios.get('https://www.easy-mock.com/mock/5e6e088e14d9d26e24e9c025/api/todolist')
+      .then(res => {
+        this.setState(() => ({
+          list: [...res.data]
+        }))
+      })
+      .catch(() => { alert('error') })
   }
 }
 
