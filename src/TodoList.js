@@ -3,15 +3,13 @@ import TodoItem from './TodoItem.js';
 import './style.css';
 import axios from 'axios';
 import 'antd/dist/antd.css';
-import { Input, Button, List, Typography } from 'antd';
+import { Input, Button, List } from 'antd';
+import store from './store';
 
 class TodoList extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      inputValue: '',
-      list: []
-    };
+    this.state = store.getState();
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleBtnClick = this.handleBtnClick.bind(this);
     this.handelItemDelete = this.handelItemDelete.bind(this)
@@ -91,8 +89,8 @@ class TodoList extends Component {
   componentDidMount() { // 一般在 componentDidMount 中进行数据的请求
     axios.get('https://easy-mock.bookset.io/mock/5e6e4030d98bbe5fa3613668/api/todolist/')
       .then(res => {
-        this.setState(() => ({
-          list: [...res.data]
+        this.setState((prevState) => ({
+          list: [...prevState.list, ...res.data]
         }))
       })
       .catch(() => { alert('error') })
