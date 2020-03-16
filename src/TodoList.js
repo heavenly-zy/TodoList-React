@@ -2,6 +2,8 @@ import React, { Component, Fragment } from 'react';
 import TodoItem from './TodoItem.js';
 import './style.css';
 import axios from 'axios';
+import 'antd/dist/antd.css';
+import { Input, Button, List, Typography } from 'antd';
 
 class TodoList extends Component {
   constructor(props) {
@@ -17,19 +19,26 @@ class TodoList extends Component {
   render() {
     return (
       <Fragment>
-        <div>
-          <label htmlFor="insetContent">输入</label>
-          <input
-            id="insetContent"
-            className="input"
-            value={this.state.inputValue}
-            onChange={this.handleInputChange}
+        <div className="wrapper">
+          <div>
+            <Input
+              placeholder="输入内容"
+              id="insetContent"
+              value={this.state.inputValue}
+              onChange={this.handleInputChange}
+            />
+            <Button type="primary" onClick={this.handleBtnClick}>提交</Button>
+          </div>
+          <List
+            bordered
+            dataSource={this.getTodoItem()}
+            renderItem={item => (
+              <List.Item>
+                {item}
+              </List.Item>
+            )}
           />
-          <button onClick={this.handleBtnClick}>提交</button>
         </div>
-        <ul>
-          {this.getTodoItem()}
-        </ul>
       </Fragment>
     )
   }
@@ -80,7 +89,7 @@ class TodoList extends Component {
   }
 
   componentDidMount() { // 一般在 componentDidMount 中进行数据的请求
-    axios.get('https://www.easy-mock.com/mock/5e6e088e14d9d26e24e9c025/api/todolist')
+    axios.get('https://easy-mock.bookset.io/mock/5e6e4030d98bbe5fa3613668/api/todolist/')
       .then(res => {
         this.setState(() => ({
           list: [...res.data]
