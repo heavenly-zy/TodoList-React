@@ -5,6 +5,7 @@ import axios from 'axios';
 import 'antd/dist/antd.css';
 import { Input, Button, List } from 'antd';
 import store from './store';
+import { CHANGE_INPUT_VALUE, ADD_TODO_ITEM, DELETE_ITEM, AJAX_DATA } from './store/actionTypes.js';
 
 class TodoList extends Component {
   constructor(props) {
@@ -66,7 +67,7 @@ class TodoList extends Component {
   }
   handleInputChange(e) {
     const action = {
-      type: 'change_input_value',
+      type: CHANGE_INPUT_VALUE,
       value: e.target.value
     }
     store.dispatch(action);
@@ -77,7 +78,7 @@ class TodoList extends Component {
   }
   handleBtnClick() {
     const action = {
-      type: 'add_todo_item'
+      type: ADD_TODO_ITEM
     }
     store.dispatch(action)
   }
@@ -88,7 +89,7 @@ class TodoList extends Component {
     //   return { list: copyList }
     // })
     const action = {
-      type: 'delete_item',
+      type: DELETE_ITEM,
       value: index
     }
     store.dispatch(action)
@@ -99,7 +100,7 @@ class TodoList extends Component {
       .then(res => {
         const ajaxData = res.data
         const action = {
-          type: 'ajax_data',
+          type: AJAX_DATA,
           value: ajaxData
         }
         store.dispatch(action)
