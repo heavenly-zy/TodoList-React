@@ -53,7 +53,8 @@ class TodoList extends Component {
             index={index}
             deleteItem={this.handelItemDelete}
           />
-          {/*<li
+          {
+        /*<li
           key={index}
           onClick={this.handelItemDelete.bind(this, index)}
           dangerouslySetInnerHTML={{ __html: item }}
@@ -81,11 +82,16 @@ class TodoList extends Component {
     store.dispatch(action)
   }
   handelItemDelete(index) {
-    this.setState((prevState) => {
-      const copyList = [...prevState.list];
-      copyList.splice(index, 1);
-      return { list: copyList }
-    })
+    // this.setState((prevState) => {
+    //   const copyList = [...prevState.list];
+    //   copyList.splice(index, 1);
+    //   return { list: copyList }
+    // })
+    const action = {
+      type: 'delete_item',
+      value: index
+    }
+    store.dispatch(action)
   }
 
   componentDidMount() { // 一般在 componentDidMount 中进行数据的请求
