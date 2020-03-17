@@ -5,7 +5,7 @@ import axios from 'axios';
 import 'antd/dist/antd.css';
 import { Input, Button, List } from 'antd';
 import store from './store';
-import { CHANGE_INPUT_VALUE, ADD_TODO_ITEM, DELETE_ITEM, AJAX_DATA } from './store/actionTypes.js';
+import { getInputChangeAction, getAddItemAction, getDeleteItemAction, getAjaxDataAction } from './store/actionCreator.js';
 
 class TodoList extends Component {
   constructor(props) {
@@ -16,7 +16,7 @@ class TodoList extends Component {
     this.handleBtnClick = this.handleBtnClick.bind(this);
     this.handelItemDelete = this.handelItemDelete.bind(this);
     this.handleStoreChange = this.handleStoreChange.bind(this);
-    // subscribe 这个函数用来订阅 store 的变化
+    // subscribe 这个函数用来订阅 store 的变化，一旦 store 发生变化就执行回调
     store.subscribe(this.handleStoreChange);
   }
   render() {
@@ -66,10 +66,7 @@ class TodoList extends Component {
     })
   }
   handleInputChange(e) {
-    const action = {
-      type: CHANGE_INPUT_VALUE,
-      value: e.target.value
-    }
+    const action = getInputChangeAction(e.target.value);
     store.dispatch(action);
   }
   handleStoreChange() {
@@ -77,9 +74,7 @@ class TodoList extends Component {
     this.setState(store.getState())
   }
   handleBtnClick() {
-    const action = {
-      type: ADD_TODO_ITEM
-    }
+    const action = getAddItemAction()
     store.dispatch(action)
   }
   handelItemDelete(index) {
@@ -88,10 +83,7 @@ class TodoList extends Component {
     //   copyList.splice(index, 1);
     //   return { list: copyList }
     // })
-    const action = {
-      type: DELETE_ITEM,
-      value: index
-    }
+    const action = getDeleteItemAction(index)
     store.dispatch(action)
   }
 
@@ -99,10 +91,7 @@ class TodoList extends Component {
     axios.get('https://easy-mock.bookset.io/mock/5e6e4030d98bbe5fa3613668/api/todolist/')
       .then(res => {
         const ajaxData = res.data
-        const action = {
-          type: AJAX_DATA,
-          value: ajaxData
-        }
+        const action = getAjaxDataAction(ajaxData)
         store.dispatch(action)
       })
       .catch(() => { alert('error') })
