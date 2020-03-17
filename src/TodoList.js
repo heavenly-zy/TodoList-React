@@ -9,10 +9,14 @@ import store from './store';
 class TodoList extends Component {
   constructor(props) {
     super(props);
+    // store.getState() 得到更新后的 state
     this.state = store.getState();
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleBtnClick = this.handleBtnClick.bind(this);
-    this.handelItemDelete = this.handelItemDelete.bind(this)
+    this.handelItemDelete = this.handelItemDelete.bind(this);
+    this.handleStoreChange = this.handleStoreChange.bind(this);
+    // subscribe 这个函数用来订阅 store 的变化
+    store.subscribe(this.handleStoreChange);
   }
   render() {
     return (
@@ -60,23 +64,21 @@ class TodoList extends Component {
     })
   }
   handleInputChange(e) {
-    // 新版 React 推荐写法
-    const value = e.target.value
-    this.setState(() => {
-      return { inputValue: value }
-    })
-    // 旧版写法
-    // this.setState({
-    //   inputValue: e.target.value
-    // })
+    const action = {
+      type: 'change_input_value',
+      value: e.target.value
+    }
+    store.dispatch(action);
+  }
+  handleStoreChange() {
+    // 将更新后的 state 存入 state 中
+    this.setState(store.getState())
   }
   handleBtnClick() {
-    this.setState((prevState) => {
-      return {
-        list: [...prevState.list, prevState.inputValue],
-        inputValue: ''
-      }
-    })
+    const action = {
+      type: 'add_todo_item'
+    }
+    store.dispatch(action)
   }
   handelItemDelete(index) {
     this.setState((prevState) => {
@@ -89,9 +91,12 @@ class TodoList extends Component {
   componentDidMount() { // 一般在 componentDidMount 中进行数据的请求
     axios.get('https://easy-mock.bookset.io/mock/5e6e4030d98bbe5fa3613668/api/todolist/')
       .then(res => {
-        this.setState((prevState) => ({
-          list: [...prevState.list, ...res.data]
-        }))
+        const ajaxData = res.data
+        const action = {
+          type: 'ajax_data',
+          value: ajaxData
+        }
+        store.dispatch(action)
       })
       .catch(() => { alert('error') })
   }
