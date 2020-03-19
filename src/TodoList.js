@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import TodoItem from './TodoItem.js';
 import './style.css';
 import axios from 'axios';
 import 'antd/dist/antd.css';
-import { Input, Button, List } from 'antd';
 import store from './store';
 import { getInputChangeAction, getAddItemAction, getDeleteItemAction, getAjaxDataAction } from './store/actionCreator.js';
+import TodoListUI from './TodoListUI.js';
 
 class TodoList extends Component {
   constructor(props) {
@@ -16,33 +16,18 @@ class TodoList extends Component {
     this.handleBtnClick = this.handleBtnClick.bind(this);
     this.handelItemDelete = this.handelItemDelete.bind(this);
     this.handleStoreChange = this.handleStoreChange.bind(this);
+    this.getTodoItem = this.getTodoItem.bind(this);
     // subscribe 这个函数用来订阅 store 的变化，一旦 store 发生变化就执行回调
     store.subscribe(this.handleStoreChange);
   }
   render() {
     return (
-      <Fragment>
-        <div className="wrapper">
-          <div>
-            <Input
-              placeholder="输入内容"
-              id="insetContent"
-              value={this.state.inputValue}
-              onChange={this.handleInputChange}
-            />
-            <Button type="primary" onClick={this.handleBtnClick}>提交</Button>
-          </div>
-          <List
-            bordered
-            dataSource={this.getTodoItem()}
-            renderItem={item => (
-              <List.Item>
-                {item}
-              </List.Item>
-            )}
-          />
-        </div>
-      </Fragment>
+      <TodoListUI 
+        inputValue={this.state.inputValue}
+        handleInputChange={this.handleInputChange}
+        handleBtnClick={this.handleBtnClick}
+        getTodoItem={this.getTodoItem}
+      />
     )
   }
   getTodoItem() {
